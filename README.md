@@ -2,17 +2,17 @@
 
 # dockerfile
 
-## jdk
+## JDK
 
 ### zulu-jdk8
 
 ```bash
-docker build -t zulu-jdk8 .
+docker pull ccr.ccs.tencentyun.com/everything/zulu-jdk8
 ```
 
 ### zulu-jdk11
 
 ```bash
-docker build -t zulu-jdk11 .
+docker pull ccr.ccs.tencentyun.com/everything/zulu-jdk11
 ```
 

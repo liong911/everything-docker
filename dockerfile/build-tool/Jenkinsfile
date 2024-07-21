@@ -1,0 +1,39 @@
+pipeline {
+  agent any
+  stages {
+    stage('检出') {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: GIT_BUILD_REF]],
+          userRemoteConfigs: [[
+            url: GIT_REPO_URL,
+            credentialsId: CREDENTIALS_ID
+          ]]
+        ])
+      }
+    }
+    stage('构建镜像') {
+      steps {
+        dir("./dockerfile/build-tool/${DOCKER_NAME}") {
+          sh 'docker build -t ${DOCKER_NAME} -t ccr.ccs.tencentyun.com/everything/${DOCKER_NAME}:latest .'
+          sh 'docker images'
+        }
+      }
+    }
+    stage('镜像推送') {
+      steps {
+        script {
+          try {
+            withCredentials([usernamePassword(credentialsId: 'ec7cf668-af1f-4cd1-9587-5baf92285e76', usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASS')]) {
+              sh "echo ${REGISTRY_PASS} | docker login -u ${REGISTRY_USER} --password-stdin ccr.ccs.tencentyun.com"
+              sh "docker push ccr.ccs.tencentyun.com/everything/${DOCKER_NAME}:latest"
+            }
+          } catch(err) {
+            echo err.getMessage()
+          }
+        }
+      }
+    }
+  }
+}
