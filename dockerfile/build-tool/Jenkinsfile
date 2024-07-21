@@ -15,7 +15,7 @@ pipeline {
     }
     stage('构建镜像') {
       steps {
-        dir("./dockerfile/build-tool/${DOCKER_NAME}") {
+        dir("./dockerfile/build-tool/jdk8-maven-node16") {
           sh 'docker build -t ${DOCKER_NAME} -t ccr.ccs.tencentyun.com/everything/${DOCKER_NAME}:latest .'
           sh 'docker images'
         }
