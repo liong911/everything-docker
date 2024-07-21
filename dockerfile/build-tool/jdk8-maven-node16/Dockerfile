@@ -17,7 +17,7 @@ RUN apt-get -qq update && \
     tar -zxf ${NODE_NAME}.tar.gz -C /opt/node && \
     apt-get -qq -y purge --auto-remove curl && \
     rm -rf /var/lib/apt/lists/* ${MAVEN_NAME}-bin.tar.gz ${NODE_NAME}.tar.gz 
-COPY settings.xml /opt/maven/${MAVEN_NAME}/conf
+COPY ./settings.xml /opt/maven/${MAVEN_NAME}/conf
 
 ENV M2_HOME=/root/.m2
 ENV NODE_HOME=/opt/node/${NODE_NAME}
