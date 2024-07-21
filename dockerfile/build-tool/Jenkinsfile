@@ -15,8 +15,8 @@ pipeline {
     }
     stage('构建镜像') {
       steps {
-        dir("./dockerfile/build-tool/jdk8-maven-node16") {
-          sh 'docker build -t ${DOCKER_NAME} -t ccr.ccs.tencentyun.com/everything/${DOCKER_NAME}:latest .'
+        dir("./dockerfile/build-tool/${DOCKER_VERSION}") {
+          sh 'docker build -t ${DOCKER_NAME} -t ccr.ccs.tencentyun.com/everything/${DOCKER_NAME}:${DOCKER_VERSION} .'
           sh 'docker images'
         }
       }
@@ -27,7 +27,7 @@ pipeline {
           try {
             withCredentials([usernamePassword(credentialsId: 'ec7cf668-af1f-4cd1-9587-5baf92285e76', usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASS')]) {
               sh "echo ${REGISTRY_PASS} | docker login -u ${REGISTRY_USER} --password-stdin ccr.ccs.tencentyun.com"
-              sh "docker push ccr.ccs.tencentyun.com/everything/${DOCKER_NAME}:latest"
+              sh "docker push ccr.ccs.tencentyun.com/everything/${DOCKER_NAME}:${DOCKER_VERSION}"
             }
           } catch(err) {
             echo err.getMessage()
